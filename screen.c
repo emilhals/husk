@@ -1,12 +1,16 @@
-#include "screen.h"
 #include <ncurses.h>
+#include <stdbool.h>
+#include <stdlib.h>
 #include <string.h>
+
+#include "card.h"
+#include "screen.h"
 
 void init_screen(Screen *screen) {
   initscr();
+
   init_colors();
 
-  noecho();
   raw();
   curs_set(0);
   nodelay(stdscr, TRUE);
@@ -16,15 +20,26 @@ void init_screen(Screen *screen) {
   screen->x = COLS;
   screen->current_mode = 0;
   screen->menu_position = 0;
+  screen->insert_mode = false;
 }
 
 void display_screen(Screen *screen) {
-  nodelay(stdscr, FALSE);
+  erase();
+
+  box(stdscr, 10, 10);
   switch (screen->current_mode) {
   case 0:
     print_home(screen);
     break;
+  case 1:
+    print_view_cards(screen);
+    break;
+  case 2:
+    print_add_card(screen);
+    break;
   }
+
+  refresh();
 }
 
 void destroy_screen(Screen *screen) {}
@@ -40,16 +55,63 @@ void print_home(Screen *screen) {
 
   for (int i = 0; i < n; i++) {
     if (screen->menu_position == i) {
-      mvprintw(center_y, center_x, "-> %s <-", items[i]);
+      mvprintw(center_y, (screen->x - strlen(items[i])) / 2, "-> %s <-",
+               items[i]);
     } else {
-      mvprintw(center_y, center_x, "   %s   ", items[i]);
+      mvprintw(center_y, (screen->x - strlen(items[i])) / 2, "   %s   ",
+               items[i]);
     }
     center_y++;
   }
   refresh();
 }
 
-void print_view_cards(Screen *screen) {}
+void print_add_card(Screen *screen) {
+  char *front_text = malloc(128);
+  char *back_text = malloc(128);
+
+  int ch;
+
+  screen->insert_mode = true;
+  curs_set(1);
+  WINDOW *front_win;
+  WINDOW *back_win;
+  front_win =
+      newwin(screen->y / 2, screen->x / 2, screen->y / 4, screen->x / 4);
+
+  back_win = newwin(screen->y / 2, screen->x / 2, screen->y / 4, screen->x / 4);
+
+  if (front_win == NULL || back_win == NULL) {
+    printf("%s", "Failed to create card window.");
+    exit(EXIT_FAILURE);
+  }
+
+  box(front_win, 0, 0);
+
+  waddstr(front_win, "Front: ");
+  wgetnstr(front_win, front_text, 128);
+
+  wgetch(front_win);
+  wrefresh(front_win);
+
+  box(back_win, 0, 0);
+
+  waddstr(back_win, "Back: ");
+  wgetnstr(back_win, back_text, 128);
+  wgetch(back_win);
+
+  Card *card = create_card(front_text, back_text);
+
+  curs_set(0);
+  screen->current_mode = 0;
+  screen->insert_mode = false;
+}
+
+void print_view_cards(Screen *screen) {
+  printw("%d", screen->current_mode);
+
+  printw("View cards");
+}
 
 void init_colors() {
   if (!has_colors()) {

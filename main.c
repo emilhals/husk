@@ -12,8 +12,8 @@ int main(void) {
   init_colors();
 
   Screen screen;
-
   init_screen(&screen);
+
   while (1) {
     handle_input(&screen);
 
@@ -23,45 +23,45 @@ int main(void) {
   }
 
   endwin();
-
   return 0;
 }
 
 void handle_input(Screen *screen) {
+
   screen->input = getch();
 
-  switch (screen->input) {
-  case KEY_UP:
-  case 'k':
-    if (screen->menu_position > 0)
-      screen->menu_position--;
-    break;
-  case KEY_DOWN:
-  case 'j':
-    if (screen->menu_position < 2)
-      screen->menu_position++;
-    break;
-  case 'q':
-    if (getch() != -1)
+  if (screen->insert_mode == false) {
+    switch (screen->input) {
+    case 'q':
+      if (screen->input != -1)
+        break;
+      endwin();
+      exit(EXIT_SUCCESS);
       break;
-    endwin();
-    exit(EXIT_SUCCESS);
-    break;
-  case 10:
-    if (screen->current_mode == 0) {
-      if (screen->menu_position == 0) {
-        printw("View cards");
+    case KEY_UP:
+      if (screen->menu_position > 0)
+        screen->menu_position--;
+      break;
+    case KEY_DOWN:
+      if (screen->menu_position < 2)
+        screen->menu_position++;
+      break;
+    case 10:
+      if (screen->current_mode == 0) {
+        if (screen->menu_position == 0) {
+          screen->current_mode = 1;
+        }
+        if (screen->menu_position == 1) {
+          screen->current_mode = 2;
+        }
+        if (screen->menu_position == 2) {
+          endwin();
+          exit(EXIT_FAILURE);
+        }
+        break;
       }
-      if (screen->menu_position == 1) {
-        printw("Add cards");
-      }
-      if (screen->menu_position == 2) {
-        endwin();
-        exit(EXIT_FAILURE);
-      }
+    default:
       break;
     }
-  default:
-    break;
   }
 }

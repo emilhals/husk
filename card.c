@@ -6,19 +6,20 @@
 #include "card.h"
 
 Card *create_card(char front_text[], char back_text[]) {
-  Card *card;
-  card = malloc(sizeof(Card));
+  Card *card = malloc(sizeof(Card));
 
   if (card == NULL) {
+    endwin();
     printf("Failed to allocate memory to new card");
     exit(EXIT_FAILURE);
   }
 
+  /* card data */
   strcpy(card->front, front_text);
   strcpy(card->back, back_text);
+  card->id = rand();
 
   save_card(card);
-
   return card;
 }
 
@@ -31,16 +32,42 @@ void save_card(Card *card) {
 
   FILE *file;
 
-  file = fopen("cards.txt", "w");
+  file = fopen("cards.txt", "ab");
 
-  fprintf(file, "%s", card->front);
+  fprintf(file, "%d %s %s\n", card->id, card->front, card->back);
 
   fclose(file);
   free(card);
 }
 
-Card *show_card(int id) {
+Card *show_card() {
   Card *card;
+
+  char line[100];
+  int id;
+  char *front;
+  char *back;
+
+  FILE *file;
+  file = fopen("cards.txt", "r");
+
+  while (fgets(line, sizeof(line), file)) {
+    char *idStr = strtok(line, " \t\n");
+    if (idStr == NULL)
+      continue;
+    id = atoi(idStr);
+
+    front = strtok(line, " \t\n");
+    if (front == NULL)
+      continue;
+
+    back = strtok(line, " \t\n");
+    if (back == NULL)
+      continue;
+  }
+
+  strcpy(card->front, front);
+  strcpy(card->back, back);
 
   return card;
 }

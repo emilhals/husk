@@ -110,8 +110,16 @@ void print_add_card(Screen *screen) {
 
 void print_view_cards(Screen *screen) {
   screen->insert_mode = false;
+  Card *card = show_card();
 
-  printw("View cards");
+  if (card == NULL) {
+    printf("%s", "Could not retrieve card");
+    endwin();
+    exit(EXIT_FAILURE);
+  }
+
+  printw("Front: %s\n", card->front);
+  printw("Back: %s\n", card->back);
 }
 
 void print_info(Screen *screen) {

@@ -10,6 +10,7 @@ typedef struct Card {
 } Card;
 
 Card *create_card(char[], char[]);
+Card *show_card();
 
 void save_card(Card *);
 

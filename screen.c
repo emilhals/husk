@@ -89,37 +89,47 @@ void print_add_card(Screen *screen) {
   box(front_win, 0, 0);
 
   waddstr(front_win, "Front: ");
-  wgetnstr(front_win, front_text, 128);
+  wgetnstr(front_win, front_text, 127);
 
-  wgetch(front_win);
+  getch();
   wrefresh(front_win);
 
   box(back_win, 0, 0);
 
   waddstr(back_win, "Back: ");
-  wgetnstr(back_win, back_text, 128);
-  wgetch(back_win);
+  wgetnstr(back_win, back_text, 127);
+  getch();
 
   Card *card = create_card(front_text, back_text);
 
   curs_set(0);
   screen->current_mode = 0;
   screen->insert_mode = false;
+  touchwin(stdscr);
 }
 
 void print_view_cards(Screen *screen) {
-  printw("%d", screen->current_mode);
+  screen->insert_mode = false;
 
   printw("View cards");
 }
 
+void print_info(Screen *screen) {
+
+  WINDOW *bottom;
+
+  bottom = newwin(LINES / 2, COLS / 2, LINES / 4, COLS / 4);
+
+  mvprintw(0, 0, "%d", screen->insert_mode);
+}
+
 void init_colors() {
   if (!has_colors()) {
-    // endwin();
+    endwin();
   }
   if (start_color() != OK) {
-    // endwin();
+    endwin();
   }
-  init_pair(1, COLOR_RED, COLOR_BLACK);
+  init_pair(1, COLOR_MAGENTA, COLOR_BLACK);
   bkgd(COLOR_PAIR(1));
 }

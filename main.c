@@ -27,14 +27,11 @@ int main(void) {
 }
 
 void handle_input(Screen *screen) {
-
   screen->input = getch();
 
   if (screen->insert_mode == false) {
     switch (screen->input) {
     case 'q':
-      if (screen->input != -1)
-        break;
       endwin();
       exit(EXIT_SUCCESS);
       break;
@@ -64,4 +61,5 @@ void handle_input(Screen *screen) {
       break;
     }
   }
+  refresh();
 }

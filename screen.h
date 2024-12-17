@@ -21,6 +21,8 @@ void print_view_cards(Screen *);
 void print_add_card(Screen *);
 void print_home(Screen *);
 
+void print_info(Screen *);
+
 void init_colors();
 
 #endif

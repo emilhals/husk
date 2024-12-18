@@ -7,6 +7,7 @@ typedef struct Card {
   int id;
   char back[CHAR_LIMIT];
   char front[CHAR_LIMIT];
+  Card *next;
 } Card;
 
 Card *create_card(char[], char[]);

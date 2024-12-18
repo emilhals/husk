@@ -118,8 +118,7 @@ void print_view_cards(Screen *screen) {
     exit(EXIT_FAILURE);
   }
 
-  printw("Front: %s\n", card->front);
-  printw("Back: %s\n", card->back);
+  printw("Front: %s\n", card->back);
 }
 
 void print_info(Screen *screen) {

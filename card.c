@@ -41,7 +41,7 @@ void save_card(Card *card) {
 }
 
 Card *show_card() {
-  Card *card;
+  Card *card = malloc(sizeof(Card));
 
   char line[100];
   int id;
@@ -50,6 +50,12 @@ Card *show_card() {
 
   FILE *file;
   file = fopen("cards.txt", "r");
+
+  if (file == NULL) {
+    perror("Error opening file");
+    endwin();
+    exit(EXIT_FAILURE);
+  }
 
   while (fgets(line, sizeof(line), file)) {
     char *idStr = strtok(line, " \t\n");
@@ -66,8 +72,17 @@ Card *show_card() {
       continue;
   }
 
-  strcpy(card->front, front);
-  strcpy(card->back, back);
+  card->id = id;
+  /*
+    strcpy(card->front, front);
+    strcpy(card->back, back);
+  */
+  if (card == NULL) {
+    printf("%s", "Could not get card");
+    endwin();
+    exit(EXIT_FAILURE);
+  }
 
+  fclose(file);
   return card;
 }

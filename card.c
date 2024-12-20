@@ -63,20 +63,21 @@ Card *show_card() {
       continue;
     id = atoi(idStr);
 
-    front = strtok(line, " \t\n");
+    front = strtok(NULL, " \t\n");
     if (front == NULL)
       continue;
 
-    back = strtok(line, " \t\n");
+    back = strtok(NULL, " \t\n");
     if (back == NULL)
       continue;
   }
 
   card->id = id;
-  /*
-    strcpy(card->front, front);
-    strcpy(card->back, back);
-  */
+  
+  strcpy(card->front, front);
+  strcpy(card->back, back);
+ 
+
   if (card == NULL) {
     printf("%s", "Could not get card");
     endwin();

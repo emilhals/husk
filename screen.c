@@ -110,6 +110,7 @@ void print_add_card(Screen *screen) {
 
 void print_view_cards(Screen *screen) {
   screen->insert_mode = false;
+
   Card *card = show_card();
 
   if (card == NULL) {
@@ -118,14 +119,36 @@ void print_view_cards(Screen *screen) {
     exit(EXIT_FAILURE);
   }
 
-  printw("Front: %s\n", card->back);
+  WINDOW *front_win;
+  WINDOW *back_win;
+
+  front_win =
+      newwin(screen->y / 2, screen->x / 2, screen->y / 4, screen->x / 4);
+
+  back_win = newwin(screen->y / 2, screen->x / 2, screen->y / 4, screen->x / 4);
+
+  if (front_win == NULL) {
+    printf("%s", "Could not create front window");
+    endwin();
+    exit(EXIT_FAILURE);
+  }
+
+  box(front_win, 0, 0);
+
+  waddstr(front_win, card->front);
+  getch();
+  wrefresh(front_win);
+
+  box(back_win, 0, 0);
+  waddstr(back_win, card->back);
+  getch();
 }
 
 void print_info(Screen *screen) {
 
   WINDOW *bottom;
 
-  bottom = newwin(LINES / 2, COLS / 2, LINES / 4, COLS / 4);
+  bottom = newwin(screen->y / 2, screen->x / 2, screen->y / 4, screen->x / 4);
 
   mvprintw(0, 0, "%d", screen->insert_mode);
 }

@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "card.h"
+#include "input.h"
 #include "screen.h"
 
 void init_screen(Screen *screen) {
@@ -30,9 +31,11 @@ void display_screen(Screen *screen) {
   switch (screen->current_mode) {
   case 0:
     print_home(screen);
+    input_home(screen);
     break;
   case 1:
     print_view_cards(screen);
+    input_view_cards(screen);
     break;
   case 2:
     print_add_card(screen);
@@ -109,8 +112,6 @@ void print_add_card(Screen *screen) {
 }
 
 void print_view_cards(Screen *screen) {
-  screen->insert_mode = false;
-
   Card *card = show_card();
 
   if (card == NULL) {
@@ -136,6 +137,7 @@ void print_view_cards(Screen *screen) {
   box(front_win, 0, 0);
 
   waddstr(front_win, card->front);
+
   getch();
   wrefresh(front_win);
 

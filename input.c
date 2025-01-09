@@ -4,17 +4,27 @@
 
 #include "input.h"
 
+void handle_input(Screen *screen) {}
+
 void input_home(Screen *screen) {
   screen->input = getch();
 
+  cbreak();
+  noecho();
   switch (screen->input) {
+  case 'k':
   case KEY_UP:
     if (screen->menu_position > 0)
       screen->menu_position--;
     break;
+  case 'j':
   case KEY_DOWN:
     if (screen->menu_position < 2)
       screen->menu_position++;
+    break;
+  case 'q':
+    endwin();
+    exit(EXIT_SUCCESS);
     break;
   case 10:
     if (screen->current_mode == 0) {
@@ -31,8 +41,6 @@ void input_home(Screen *screen) {
       break;
     }
   default:
-    printf("Error: unhandled input command");
-    endwin();
     break;
   }
   refresh();
@@ -45,6 +53,7 @@ void input_view_cards(Screen *screen) {
   case 'q':
     endwin();
     exit(EXIT_SUCCESS);
+    break;
   default:
     break;
   }

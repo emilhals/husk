@@ -3,6 +3,7 @@
 
 #include "screen.h"
 
+void handle_input(Screen *);
 void input_home(Screen *);
 void input_view_cards(Screen *);
 

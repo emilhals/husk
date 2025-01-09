@@ -75,6 +75,7 @@ void print_add_card(Screen *screen) {
 
   int ch;
 
+  echo();
   screen->insert_mode = true;
   curs_set(1);
   WINDOW *front_win;
@@ -112,13 +113,8 @@ void print_add_card(Screen *screen) {
 }
 
 void print_view_cards(Screen *screen) {
-  Card *card = show_card();
-
-  if (card == NULL) {
-    printf("%s", "Could not retrieve card");
-    endwin();
-    exit(EXIT_FAILURE);
-  }
+  read_cards();
+  Card *card = list_cards("H2O");
 
   WINDOW *front_win;
   WINDOW *back_win;
@@ -138,12 +134,14 @@ void print_view_cards(Screen *screen) {
 
   waddstr(front_win, card->front);
 
-  getch();
+  wgetch(front_win);
   wrefresh(front_win);
 
   box(back_win, 0, 0);
   waddstr(back_win, card->back);
-  getch();
+
+  wgetch(back_win);
+  wrefresh(back_win);
 }
 
 void print_info(Screen *screen) {

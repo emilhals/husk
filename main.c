@@ -1,11 +1,9 @@
 #define _XOPEN_SOURCE_EXTENDED 1
 #include <ncurses.h>
-#include <stdlib.h>
 
+#include "input.h"
 #include "screen.h"
 #include "utils.h"
-
-void handle_input(Screen *);
 
 int main(void) {
   init_ncurses();
@@ -24,21 +22,4 @@ int main(void) {
 
   endwin();
   return 0;
-}
-
-void handle_input(Screen *screen) {
-  /*  screen->input = getch();
-
-   if (screen->insert_mode == false) {
-     switch (screen->input) {
-     case 'q':
-       endwin();
-       exit(EXIT_SUCCESS);
-       break;
-     default:
-       break;
-     }
-   }
-   refresh();
- */
 }
